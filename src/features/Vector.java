@@ -36,6 +36,15 @@ public class Vector extends Tuple {
     }
 
     /**
+     * Multiply a Vector by a scalar amount
+     * @param v The value we want to multiply the vector by
+     * @return The resultant vector
+     */
+    public Vector multiply(double v) {
+        return new Vector(getX() * v, getY() * v, getZ() * v);
+    }
+
+    /**
      * Subtract two vectors
      * @param v the Vector we wish to subtract
      * @return The resultant Vector showing the change in direction between

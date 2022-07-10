@@ -86,4 +86,16 @@ class CanvasTest {
 
         assertEquals(validData, ppmData.toString());
     }
+
+    @Test
+    void testNoLinesInPPMFileCanBeMoreThan70Characters() {
+        Canvas c = new Canvas(10, 2);
+        c.setAllPixels(new Colour(1, 0.8, 0.8));
+        ArrayList<String> ppm = PPMWriter.canvas_to_ppm(c);
+        assertTrue(ppm.size() >= 7);
+
+        for (String line: ppm) {
+            assertTrue(line.length() <= 70);
+        }
+    }
 }

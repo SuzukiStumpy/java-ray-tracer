@@ -2,6 +2,8 @@ package features;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 /**
  * A Canvas is simply a rectangular grid of pixels, each of which has an
  * associated colour.
@@ -56,29 +58,40 @@ public class Canvas {
 
     /**
      * Set the pixel at the coordinates (x,y) to the colour c
-     * @throws IndexOutOfBoundsException if either of the X or Y coordinates
-     * fall outside of the canvas area.
      * @param x The x coordinate of the pixel
      * @param y The y coordinate of the pixel
      * @param c The colour to set
      */
-    public void setPixel(int x, int y, @NotNull Colour c) throws IndexOutOfBoundsException {
-        int index = getPixelIndex(x, y);
-        pixelData[index] = new Colour(c.getR(), c.getG(), c.getB());
+    public void setPixel(int x, int y, @NotNull Colour c) {
+        try {
+            int index = getPixelIndex(x, y);
+            pixelData[index] = new Colour(c.getR(), c.getG(), c.getB());
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void setAllPixels(@NotNull Colour c) {
+        Arrays.fill(pixelData, c);
     }
 
     /**
      * Get the colour at coordinates (x,y).
-     * @throws IndexOutOfBoundsException if either of the x or y coordinates fall
-     * outside the canvas area.
      * @param x The x coordinate of the pixel
      * @param y The y coordinate of the pixel
-     * @return The colour of the pixel at the given coordinates
+     * @return The colour of the pixel at the given coordinates (or null if pixel is off the canvas)
      */
-    public Colour getPixel(int x, int y) throws IndexOutOfBoundsException {
-        int index = getPixelIndex(x, y);
-        Colour pixelColour = pixelData[index];
-        return new Colour(pixelColour.getR(), pixelColour.getG(), pixelColour.getB());
+    public Colour getPixel(int x, int y) {
+        try {
+            int index = getPixelIndex(x, y);
+            Colour pixelColour = pixelData[index];
+            return new Colour(pixelColour.getR(), pixelColour.getG(), pixelColour.getB());
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -91,7 +104,7 @@ public class Canvas {
      */
     private int getPixelIndex(int x, int y) throws IndexOutOfBoundsException {
         if (x < 0 || x >= width || y < 0 || y >= height) {
-            throw new IndexOutOfBoundsException("Pixel falls outside of the defined canvas area");
+            throw new IndexOutOfBoundsException("Pixel ("+ x +", "+ y +") falls outside of the defined canvas area");
         }
         return (x + (width * y));
     }
