@@ -49,6 +49,33 @@ public class Colour {
     }
 
     /**
+     * Get integer component clamped to given min/max range.  Only values from
+     * 0.0 to 1.0 are considered, anything higher or lower will be clamped to
+     * the given range values.  Static method since we simply pass the decimal
+     * value into the method call instead of requesting the specific component
+     * by name.
+     * @param component The colour component we want to clamp
+     * @param lowerBound The lower bound of the range to return (equal to 0.0)
+     * @param upperBound The upper bound of the range to return (equal to 1.0)
+     */
+    public static int getClampedComponent(double component, int lowerBound, int upperBound) {
+        // Make sure that the bounds are provided in the correct sequence...
+        int lBound = Math.min(lowerBound, upperBound);
+        int uBound = Math.max(lowerBound, upperBound);
+
+        // Check the clamp values first.
+        if (component < 0.0) {
+            return lBound;
+        } else if (component > 1.0) {
+            return uBound;
+        }
+
+        // Now we can clamp the value to the range
+        int range = uBound - lBound;
+        return (int) Math.round((range * component) + lBound);
+    }
+
+    /**
      * @return A descriptive string of the colour object
      */
     public String toString() {
