@@ -2,6 +2,7 @@ package features;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -99,11 +100,12 @@ public class Matrix {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        DecimalFormat fmt = new DecimalFormat("0.00000");
 
         for (int row = 0; row < degree; row++){
             sb.append("| ");
             for (int col = 0; col < degree; col++) {
-                sb.append(matrix[getElementIndex(row, col)]).append(" | ");
+                sb.append(fmt.format(matrix[getElementIndex(row, col)])).append(" | ");
             }
             sb.append("\n");
         }
@@ -216,6 +218,134 @@ public class Matrix {
         }
     }
 
+    /**
+     * @return The transposed matrix (ie: row/col swapped with col/row)
+     */
+    public Matrix transpose() {
+        Matrix m = new Matrix(degree);
+
+        try {
+            for (int row = 0; row < degree; row++) {
+                for (int col = 0; col < degree; col++) {
+                    m.setElement(row, col, this.getElement(col, row));
+                }
+            }
+            return m;
+        }
+        catch (IllegalAccessException ex) {
+            // Shouldn't get here...
+            System.err.println("Somehow got an IllegalAccessException during matrix transposition.  This should not be possible!");
+            return null;
+        }
+    }
+
+    /**
+     * Calculate the determinant of a 2x2 Matrix
+     * @return The calculated determinant
+     */
+    public double det() {
+        try {
+            // Determinant for a 2x2 matrix
+            if (degree == 2) {
+                return (getElement(0, 0) * getElement(1, 1)) - (getElement(0, 1) * getElement(1, 0));
+            } else {
+                // Determinant for a matrix of degree > 2
+                double det = 0;
+                for (int col = 0; col < degree; col++) {
+                    det += getElement(0, col) * cofactor(0, col);
+                }
+                return det;
+            }
+        }
+        catch (Exception ignored) {
+            return 0; // Shouldn't get here...
+        }
+    }
+
+    /**
+     * Generate the submatrix of A, which is the matrix formed by removing the
+     * specified row and column from Matrix A
+     * @param row The row index to remove
+     * @param col The column index to remove
+     * @return The specified submatrix
+     */
+    public Matrix submatrix(int row, int col) throws RuntimeException {
+        if (row < 0 || row > degree || col < 0 || col > degree) {
+            throw new RuntimeException("Row/Column parameters are out of bounds for returning submatrix!");
+        }
+
+        try {
+            Matrix m = new Matrix(degree - 1);
+
+            int mrIdx = 0;
+            int mcIdx;
+
+            for (int srcRow = 0; srcRow < degree; srcRow++) {
+                mcIdx = 0;  // Reset the column index for the destination cell
+                for (int srcCol = 0; srcCol < degree; srcCol++) {
+                    if (srcRow != row && srcCol != col) {
+                        m.setElement(mrIdx, mcIdx, getElement(srcRow, srcCol));
+                        mcIdx++;
+                    }
+                }
+                if (mcIdx > 0) {
+                    mrIdx++;
+                }
+            }
+            return m;
+        }
+        catch (Exception ignore) {
+            return null;
+        }
+    }
+
+    /**
+     * Calculate the minor of the submatrix at startRow, startCol
+     * @param startRow The row we start at
+     * @param startCol The column we start at
+     * @return The value of the determinant of that submatrix.
+     */
+    public double minor(int startRow, int startCol) {
+        Matrix sub = submatrix(startRow, startCol);
+        return sub.det();
+    }
+
+    /**
+     * Determine the cofactor of a matrix
+     * @param row The row we determine the submatrix from
+     * @param col The column we determine the submatrix from
+     * @return The computed cofactor value
+     */
+    public double cofactor(int row, int col) {
+        // Sign needs to change if row + col is odd
+        int sign = ((row+col)%2) == 0 ? 1 : -1;
+
+        return minor(row, col) * sign;
+    }
+
+    /**
+     * @return True if the matrix can be inverted
+     */
+    public boolean isInvertible() {
+        return det() != 0;
+    }
+
+    public Matrix inverse() throws RuntimeException {
+        if (!isInvertible()) {
+            throw new RuntimeException("Matrix is not invertible!");
+        }
+
+        Matrix m = new Matrix(degree);
+        double det = det();
+
+        for (int row = 0; row < degree; row++) {
+            for (int col = 0; col < degree; col++) {
+                double c = cofactor(row, col);
+                m.setElement(col, row, c / det);
+            }
+        }
+        return m;
+    }
     /**
      * @param degree The size of the square identity matrix to return
      * @return The identity matrix thus generated
