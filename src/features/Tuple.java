@@ -12,10 +12,10 @@ import java.util.Objects;
  * @version July 8th, 2022
  */
 public class Tuple {
-    private final double x;
-    private final double y;
-    private final double z;
-    private final double w;
+    private double x;
+    private double y;
+    private double z;
+    private double w;
 
     /**
      * Constructor.  Define a tuple with the specified values.
@@ -61,6 +61,68 @@ public class Tuple {
      */
     public double getW() {
         return w;
+    }
+
+    /**
+     * @param v Set the value of the x parameter to the value v
+     */
+    public void setX(double v) {
+        x = v;
+    }
+
+    /**
+     * @param v Set the value of the Y parameter to the value v
+     */
+    public void setY(double v) {
+        y = v;
+    }
+
+    /**
+     * @param v Set the value of the Z parameter to the value v
+     */
+    public void setZ(double v) {
+        z = v;
+    }
+
+    /**
+     * @param v Set the value of the W parameter to the value v
+     */
+    public void setW(double v) {
+        w = v;
+    }
+
+    /**
+     * Allows us to reference the elements in a tuple via a numeric index [0..4]
+     * @param idx The index of the X,Y,Z,W element
+     * @return The value stored at that index
+     * @throws IndexOutOfBoundsException If we attempt to access an invalid index.
+     */
+    public double getElementByIndex(int idx) throws IndexOutOfBoundsException {
+        return switch (idx) {
+            case 0 -> getX();
+            case 1 -> getY();
+            case 2 -> getZ();
+            case 3 -> getW();
+            default ->
+                throw new IndexOutOfBoundsException("Invalid index provided to tuple!");
+        };
+    }
+
+    /**
+     * Allows setting of an individual element within a tuple based on its index position (0..4)
+     * @param idx The index of the element we want to set
+     * @param value The value we want to set it to
+     * @throws IndexOutOfBoundsException If we've attempted to access an invalid index value
+     */
+    public void setElementByIndex(int idx, double value) throws IndexOutOfBoundsException {
+        switch (idx) {
+            case 0 -> setX(value);
+            case 1 -> setY(value);
+            case 2 -> setZ(value);
+            case 3 -> setW(value);
+            default ->
+                throw new IndexOutOfBoundsException("Invalid index provided to tuple1");
+        }
     }
 
     /**
