@@ -278,10 +278,9 @@ public class Matrix {
             Matrix m = new Matrix(degree - 1);
 
             int mrIdx = 0;
-            int mcIdx;
 
             for (int srcRow = 0; srcRow < degree; srcRow++) {
-                mcIdx = 0;  // Reset the column index for the destination cell
+                int mcIdx = 0;  // Reset the column index for the destination cell
                 for (int srcCol = 0; srcCol < degree; srcCol++) {
                     if (srcRow != row && srcCol != col) {
                         m.setElement(mrIdx, mcIdx, getElement(srcRow, srcCol));
