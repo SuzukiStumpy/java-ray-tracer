@@ -221,4 +221,18 @@ public class Tuple {
     public Tuple divide(int m) {
         return new Tuple(x/m, y/m, z/m, w/m);
     }
+
+    /**
+     * @return tuple converted to a Vector
+     */
+    public Vector toVector() {
+        return new Vector(x, y, z);
+    }
+
+    /**
+     * @return tuple converted to a point
+     */
+    public Point toPoint() {
+        return new Point(x, y, z);
+    }
 }

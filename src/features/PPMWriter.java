@@ -1,5 +1,7 @@
 package features;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,5 +67,28 @@ public class PPMWriter {
         }
 
         return ppm;
+    }
+
+    /**
+     * Save the specified canvas to a PPM formatted file
+     * @param filename The filename/path that we wish to save to
+     * @param c The canvas who's content we're saving
+     */
+    public static void saveCanvasToFile(@NotNull String filename, Canvas c) {
+        ArrayList<String> ppm = canvas_to_ppm(c);
+
+        try {
+            FileWriter f = new FileWriter(filename);
+            for (String line: ppm) {
+                f.write(line + "\n");
+            }
+            f.close();
+        }
+        catch (IOException ex) {
+            System.err.println("File IO Exception raised");
+            ex.printStackTrace();
+            System.exit(-1);
+        }
+
     }
 }

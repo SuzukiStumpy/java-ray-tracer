@@ -19,20 +19,7 @@ public class TestVectors {
             c.setPixel(x, y, new Colour(1,0,0));
         }
 
-        // Write the canvas to file...
-        ArrayList<String> ppm = PPMWriter.canvas_to_ppm(c);
-
-        try {
-            FileWriter f = new FileWriter("testPlot.ppm");
-            for (String line: ppm) {
-                f.write(line +"\n");
-            }
-            f.close();
-        }
-        catch (IOException ex) {
-            System.out.println("File IO Exception raised");
-            ex.printStackTrace();
-        }
+        PPMWriter.saveCanvasToFile("testPlot.ppm", c);
     }
 
     public static Projectile tick(Environment env, Projectile p) {

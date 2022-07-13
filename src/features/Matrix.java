@@ -57,6 +57,15 @@ public class Matrix {
     }
 
     /**
+     * Copy constructor for Matrix objects.  Allows us to clone the current object.
+     * @param other The Matrix we wish to clone
+     */
+    public Matrix(Matrix other) {
+        this.degree = other.degree;
+        this.matrix = other.matrix.clone();
+    }
+
+    /**
      * Internal function.  Maps an element position of [row][col] to the internal index.
      * @param x The row of the element we're referencing
      * @param y The column of the element we're referencing
@@ -345,6 +354,78 @@ public class Matrix {
         }
         return m;
     }
+
+    /**
+     * Non-static method to apply a translation to a matrix with the specified (x, y, z) units.
+     * @param x The amount to move in x
+     * @param y The amount to move in y
+     * @param z The amount to move in z
+     * @return The resulting matrix
+     */
+    public Matrix translate(double x, double y, double z) {
+        Matrix t = Matrix.translation(x, y, z);
+        return t.multiply(this);
+    }
+
+    /**
+     * Return a scaling matrix with the specified (x, y, z) scale factors.
+     * Use a negative scaling to reflect in the appropriate axis
+     * @param x Scale factor in X
+     * @param y Scale factor in Y
+     * @param z Scale factor in Z
+     * @return The resultant scaling matrix
+     */
+    public Matrix scale(double x, double y, double z) {
+        Matrix t = Matrix.scaling(x, y, z);
+        return t.multiply(this);
+    }
+
+    /**
+     * Return a rotation matrix which rotates by 'r' radians about the x axis.
+     * @param r The amount to rotate by (in radians)
+     * @return The resulting rotation matrix
+     */
+    public Matrix rotate_x(double r) {
+        Matrix t = Matrix.rotation_x(r);
+        return t.multiply(this);
+    }
+
+    /**
+     * Return a rotation matrix which rotates by 'r' radians about the y axis.
+     * @param r The amount to rotate by (in radians)
+     * @return The resulting rotation matrix
+     */
+    public Matrix rotate_y(double r) {
+        Matrix t = Matrix.rotation_y(r);
+        return t.multiply(this);
+    }
+
+    /**
+     * Return a rotation matrix which rotates by 'r' radians about the z axis.
+     * @param r The amount to rotate by (in radians)
+     * @return The resulting rotation matrix
+     */
+    public Matrix rotate_z(double r) {
+        Matrix t = Matrix.rotation_z(r);
+        return t.multiply(this);
+    }
+
+    /**
+     * Return a shearing matrix which proportionally moves a point in relation to
+     * the scaling factors specified in the parameters.
+     * @param xy Scale factor in X proportional to y
+     * @param xz Scale factor in X proportional to z
+     * @param yx Scale factor in y proportional to x
+     * @param yz Scale factor in y proportional to z
+     * @param zx Scale factor in z proportional to x
+     * @param zy Scale factor in z proportional to y
+     * @return The generated shearing matrix
+     */
+    public Matrix shear(double xy, double xz, double yx, double yz, double zx, double zy) {
+        Matrix t = Matrix.shearing(xy, xz, yx, yz, zx, zy);
+        return t.multiply(this);
+    }
+
     /**
      * @param degree The size of the square identity matrix to return
      * @return The identity matrix thus generated
@@ -354,6 +435,101 @@ public class Matrix {
         for (int i = 0; i < degree; i++) {
             m.setElement(i, i, 1);
         }
+        return m;
+    }
+
+    /**
+     * Return a translation matrix with the specified (x, y, z) units.
+     * @param x The amount to move in x
+     * @param y The amount to move in y
+     * @param z The amount to move in z
+     * @return The specified translation matrix
+     */
+    public static Matrix translation(double x, double y, double z) {
+        Matrix m = Matrix.identity(4);
+        m.setElement(0, 3, x);
+        m.setElement(1, 3, y);
+        m.setElement(2, 3, z);
+        return m;
+    }
+
+    /**
+     * Return a scaling matrix with the specified (x, y, z) scale factors.
+     * Use a negative scaling to reflect in the appropriate axis
+     * @param x Scale factor in X
+     * @param y Scale factor in Y
+     * @param z Scale factor in Z
+     * @return The resultant scaling matrix
+     */
+    public static Matrix scaling(double x, double y, double z) {
+        Matrix m = Matrix.identity(4);
+        m.setElement(0,0, x);
+        m.setElement(1, 1, y);
+        m.setElement(2,2, z);
+        return m;
+    }
+
+    /**
+     * Return a rotation matrix which rotates by 'r' radians about the x axis.
+     * @param r The amount to rotate by (in radians)
+     * @return The resulting rotation matrix
+     */
+    public static Matrix rotation_x(double r) {
+        Matrix m = Matrix.identity(4);
+        m.setElement(1,1, Math.cos(r));
+        m.setElement(1,2, -Math.sin(r));
+        m.setElement(2,1, Math.sin(r));
+        m.setElement(2,2, Math.cos(r));
+        return m;
+    }
+
+    /**
+     * Return a rotation matrix which rotates by 'r' radians about the y axis.
+     * @param r The amount to rotate by (in radians)
+     * @return The resulting rotation matrix
+     */
+    public static Matrix rotation_y(double r) {
+        Matrix m = Matrix.identity(4);
+        m.setElement(0,0, Math.cos(r));
+        m.setElement(0,2, Math.sin(r));
+        m.setElement(2,0, -Math.sin(r));
+        m.setElement(2,2, Math.cos(r));
+        return m;
+    }
+
+    /**
+     * Return a rotation matrix which rotates by 'r' radians about the z axis.
+     * @param r The amount to rotate by (in radians)
+     * @return The resulting rotation matrix
+     */
+    public static Matrix rotation_z(double r) {
+        Matrix m = Matrix.identity(4);
+        m.setElement(0,0, Math.cos(r));
+        m.setElement(0,1, -Math.sin(r));
+        m.setElement(1,0, Math.sin(r));
+        m.setElement(1,1, Math.cos(r));
+        return m;
+    }
+
+    /**
+     * Return a shearing matrix which proportionally moves a point in relation to
+     * the scaling factors specified in the parameters.
+     * @param xy Scale factor in X proportional to y
+     * @param xz Scale factor in X proportional to z
+     * @param yx Scale factor in y proportional to x
+     * @param yz Scale factor in y proportional to z
+     * @param zx Scale factor in z proportional to x
+     * @param zy Scale factor in z proportional to y
+     * @return The generated shearing matrix
+     */
+    public static Matrix shearing(double xy, double xz, double yx, double yz, double zx, double zy) {
+        Matrix m = Matrix.identity(4);
+        m.setElement(0, 1, xy);
+        m.setElement(0, 2, xz);
+        m.setElement(1, 0, yx);
+        m.setElement(1, 2, yz);
+        m.setElement(2, 0, zx);
+        m.setElement(2, 1, zy);
         return m;
     }
 }
