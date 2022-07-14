@@ -91,4 +91,26 @@ class RayTest {
         assertEquals(s, xs.get(0).getShape());
         assertEquals(s, xs.get(1).getShape());
     }
+
+    @Test
+    void testTranslatingARay() {
+        Ray r = new Ray(new Point(1,2,3), new Vector(0,1,0));
+        Matrix m = Matrix.translation(3,4,5);
+
+        Ray r2 = r.transform(m);
+
+        assertEquals(new Point(4,6,8), r2.getOrigin());
+        assertEquals(new Vector(0,1,0), r2.getDirection());
+    }
+
+    @Test
+    void testScalingARay() {
+        Ray r = new Ray(new Point(1,2,3), new Vector(0,1,0));
+        Matrix m = Matrix.scaling(2,3,4);
+
+        Ray r2 = r.transform(m);
+
+        assertEquals(new Point(2,6,12), r2.getOrigin());
+        assertEquals(new Vector(0,3,0), r2.getDirection());
+    }
 }

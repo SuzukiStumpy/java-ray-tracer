@@ -3,7 +3,6 @@ package features;
 import objects.Shape;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +27,15 @@ public class Ray {
     }
 
     /**
+     * Copy constructor, duplicates a Ray
+     * @param other The ray we wish to duplicate.
+     */
+    public Ray(@NotNull Ray other) {
+        origin = new Point(other.origin);
+        direction = new Vector(other.direction);
+    }
+
+    /**
      * @return gets the ray's origin
      */
     public Point getOrigin() {
@@ -46,7 +54,7 @@ public class Ray {
      * Computation is:
      *      Position = origin + (direction * t)
      * @param t The point in time that we wish to grab the point for
-     * @return The point interested by the ray at time t
+     * @return The point intersected by the ray at time t
      */
     public Point getPosition(double t) {
         return origin.add(direction.multiply(t));
@@ -58,14 +66,17 @@ public class Ray {
      * @return The list of time units where the ray intersects
      */
     public ArrayList<Intersection> intersect(@NotNull Shape s) {
+        // Transform the ray by the inverse of the shape's transformation
+        Ray r2 = new Ray(this).transform(s.getTransform().inverse());
+
         // Create a list for storing the intersected points (if any)
         ArrayList<Intersection> xs = new ArrayList<>();
 
         // Compute the discriminant to determine whether we've intersected or
         // not
-        Vector shapeToRay = origin.subtract(new Point(0,0,0));
-        double a = direction.dot(direction);
-        double b = 2 * direction.dot(shapeToRay);
+        Vector shapeToRay = r2.origin.subtract(new Point(0,0,0));
+        double a = r2.direction.dot(r2.direction);
+        double b = 2 * r2.direction.dot(shapeToRay);
         double c = shapeToRay.dot(shapeToRay) - 1;
         double discriminant = b*b - 4*a*c;  // This is the discriminant
 
@@ -78,8 +89,22 @@ public class Ray {
         // Calculate the root of the discriminant to save having to compute
         // it twice
         double discriminantRoot = Math.sqrt(discriminant);
-        xs.add(new Intersection((-b - discriminantRoot) / 2*a, s));
-        xs.add(new Intersection((-b + discriminantRoot) / 2*a, s));
+        xs.add(new Intersection((-b - discriminantRoot) / (2*a), s));
+        xs.add(new Intersection((-b + discriminantRoot) / (2*a), s));
         return xs;
+    }
+
+    /**
+     * Apply the supplied transformation matrix to the ray and return the result
+     * Note that the transformation is applied to a copy of the current ray rather
+     * than performing the transformation in-situ.  This allows us to retain the
+     * original data so that we keep the original world-space distances
+     * @param t The transformation matrix we wish to apply.
+     * @return A new ray with the result of the transformation.
+     */
+    public Ray transform(@NotNull Matrix t) {
+        Point o = t.multiply(origin).toPoint();
+        Vector v = t.multiply(direction).toVector();
+        return new Ray(o, v);
     }
 }

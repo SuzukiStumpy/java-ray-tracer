@@ -14,6 +14,14 @@ public class Vector extends Tuple {
     }
 
     /**
+     * Copy constructor
+     * @param other The vector we wish to duplicate
+     */
+    public Vector(Vector other) {
+        super(other.getX(), other.getY(), other.getZ(), 0.0);
+    }
+
+    /**
      * Add a point to a vector
      * @param p The point we're adding to the vector
      * @return The resultant point from the addition

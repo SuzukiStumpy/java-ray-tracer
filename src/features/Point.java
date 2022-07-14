@@ -20,6 +20,14 @@ public class Point extends Tuple {
     }
 
     /**
+     * Copy constructor for a Point
+     * @param other The point we wish to duplicate
+     */
+    public Point(Point other) {
+        super(other.getX(), other.getY(), other.getZ(), 1.0);
+    }
+
+    /**
      * Add a vector to a point
      * @param v The vector we want to add to this point
      * @return The new point we arrive at
