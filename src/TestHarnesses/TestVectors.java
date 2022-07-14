@@ -1,9 +1,6 @@
-import features.*;
+package TestHarnesses;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+import features.*;
 
 public class TestVectors {
     public static void main(String[] args) {
