@@ -25,6 +25,14 @@ public class Colour {
     }
 
     /**
+     * copy constructor
+     * @param other The colour we wish to duplicate
+     */
+    public Colour(@NotNull Colour other) {
+        colour = new Tuple(other.getR(), other.getG(), other.getB(), 1.0);
+    }
+
+    /**
      * Accessor for the red component
      * @return The decimal value of the red component
      */

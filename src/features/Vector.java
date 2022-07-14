@@ -106,4 +106,18 @@ public class Vector extends Tuple {
             getX() * v2.getY() - getY() * v2.getX());
     }
 
+    /**
+     * Return the vector derived by reflecting around the given normal
+     * @param normal The Normal vector around which we are reflecting
+     * @return The reflected vector
+     */
+    public Vector reflect(@NotNull Vector normal) {
+        return new Vector(this)
+            .subtract(normal
+                .multiply(2)
+                .multiply(this.dot(normal))
+            )
+            .toVector();
+    }
+
 }

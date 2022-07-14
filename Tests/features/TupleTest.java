@@ -144,4 +144,22 @@ class TupleTest {
         assertEquals(new Vector(-1,2,-1), a.cross(b));
         assertEquals(new Vector(1,-2,1), b.cross(a));
     }
+
+    @Test
+    void testReflectingAVectorApproachingAt45Degrees() {
+        Vector v = new Vector(1, -1, 0);
+        Vector n = new Vector(0, 1, 0);
+        Vector r = v.reflect(n);
+
+        assertEquals(new Vector(1, 1, 0), r);
+    }
+
+    @Test
+    void testReflectingAVectorOffASlantedSurface() {
+        Vector v = new Vector(0, -1, 0);
+        Vector n = new Vector(Math.sqrt(2)/2, Math.sqrt(2)/2, 0);
+        Vector r = v.reflect(n);
+
+        assertEquals(new Vector(1, 0, 0), r);
+    }
 }
