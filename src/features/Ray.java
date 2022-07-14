@@ -4,6 +4,7 @@ import objects.Shape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Models a ray within the raytracer, a ray being, mathematically simply a
@@ -91,6 +92,24 @@ public class Ray {
         double discriminantRoot = Math.sqrt(discriminant);
         xs.add(new Intersection((-b - discriminantRoot) / (2*a), s));
         xs.add(new Intersection((-b + discriminantRoot) / (2*a), s));
+        return xs;
+    }
+
+    /**
+     * Return the (sorted) intersection list for all objects within a World object
+     * with this ray
+     * @param w The world object that we are iterating through
+     * @return The list of intersections sorted into increasing values of T
+     */
+    public ArrayList<Intersection> intersect(@NotNull World w) {
+        ArrayList<Intersection> xs = new ArrayList<>();
+
+        for (Shape object: w.getObjects()) {
+            xs.addAll(this.intersect(object));
+        }
+
+        Collections.sort(xs);
+
         return xs;
     }
 

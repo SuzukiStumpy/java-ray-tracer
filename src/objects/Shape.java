@@ -6,7 +6,7 @@ import features.Point;
 import features.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+import java.util.Objects;
 
 /**
  * Abstract class for all shapes within the world.  All shapes should
@@ -16,7 +16,6 @@ import java.util.UUID;
  * @version July 14th, 2022
  */
 public abstract class Shape {
-    private final UUID id;
     private Matrix transform;
     private Material material;
 
@@ -24,16 +23,21 @@ public abstract class Shape {
      * Constructor: generates a unique ID for each generated shape
      */
     public Shape() {
-        id = UUID.randomUUID();
         transform = Matrix.identity(4);
         material = new Material();
     }
 
-    /**
-     * @return Gets the unique, internal identifier for a shape.
-     */
-    public UUID getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shape shape = (Shape) o;
+        return transform.equals(shape.transform) && material.equals(shape.material);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(transform, material);
     }
 
     /**

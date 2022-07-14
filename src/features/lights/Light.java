@@ -6,6 +6,8 @@ import features.Point;
 import features.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Base abstract class for lights
  *
@@ -19,6 +21,20 @@ public abstract class Light {
     protected Light(@NotNull Point position, @NotNull Colour intensity) {
         this.position = new Point(position);
         this.intensity = new Colour(intensity);
+    }
+
+    // Generated methods to allow for collection comparisons/contains verification
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Light light = (Light) o;
+        return position.equals(light.position) && intensity.equals(light.intensity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position, intensity);
     }
 
     /**

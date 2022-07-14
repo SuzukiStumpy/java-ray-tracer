@@ -61,4 +61,46 @@ class IntersectionTest {
         Intersection i = Intersection.hit(xs);
         assertEquals(i4, i);
     }
+
+    @Test
+    void testPrecomputationOfTheStateOfAnIntersection() {
+        Ray r = new Ray(new Point(0,0,-5), new Vector(0,0,1));
+        Sphere shape = new Sphere();
+        Intersection i = new Intersection(4, shape);
+
+        Precompute comps = new Precompute(i, r);
+
+        assertEquals(i.getTime(), comps.t);
+        assertEquals(i.getShape(), comps.object);
+        assertEquals(new Point(0,0,-1), comps.point);
+        assertEquals(new Vector(0,0,-1), comps.eye);
+        assertEquals(new Vector(0,0,-1), comps.normal);
+    }
+
+    @Test
+    void testHitWhenIntersectionOccursOnTheOutside() {
+        Ray r = new Ray(new Point(0,0,-5), new Vector(0,0,1));
+        Sphere shape = new Sphere();
+        Intersection i = new Intersection(4, shape);
+
+        Precompute comps = new Precompute(i, r);
+
+        assertFalse(comps.inside);
+    }
+
+    @Test
+    void testHitWhenIntersectionOccursOnTheInside() {
+        Ray r = new Ray(new Point(0,0,0), new Vector(0,0,1));
+        Sphere shape = new Sphere();
+        Intersection i = new Intersection(1, shape);
+
+        Precompute comps = new Precompute(i, r);
+
+        assertEquals(new Point(0,0,1), comps.point);
+        assertEquals(new Vector(0,0,-1), comps.eye);
+        assertTrue(comps.inside);
+        assertEquals(new Vector(0,0,-1), comps.normal);
+    }
+
+
 }
