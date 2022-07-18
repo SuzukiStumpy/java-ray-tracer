@@ -39,7 +39,7 @@ public class FirstShadedTest {
 
                 Point pos = new Point(world_x, world_y, wall_z);
                 Ray r = new Ray(rayOrigin, pos.subtract(rayOrigin).normalize());
-                ArrayList<Intersection> xs = r.intersect(s);
+                ArrayList<Intersection> xs = s.intersect(r);
 
                 Intersection hit = Intersection.hit(xs);
 

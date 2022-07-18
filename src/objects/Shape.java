@@ -1,11 +1,9 @@
 package objects;
 
-import features.Material;
-import features.Matrix;
-import features.Point;
-import features.Vector;
+import features.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -57,20 +55,6 @@ public abstract class Shape {
     }
 
     /**
-     * Initial implementation is specific for returning normal against unit sphere.
-     * This will be enhanced for general shapes later.
-     * @param world The world point at which we want to calculate the Normal
-     * @return The Normal at the given point.
-     */
-    public Vector normal_at(@NotNull Point world) {
-        // Transform the world point to object space
-        Point object = transform.inverse().multiply(world).toPoint();
-        Vector normalObj = object.subtract(new Point(0, 0, 0));
-        Vector normalWld = transform.inverse().transpose().multiply(normalObj).toVector();
-        return normalWld.normalize();
-    }
-
-    /**
      * @return The material currently assigned to the object
      */
     public Material getMaterial() {
@@ -84,4 +68,44 @@ public abstract class Shape {
     public void setMaterial(@NotNull Material m) {
         material = new Material(m);
     }
+
+    /**
+     * Method to intersect a shape with a ray.  This base function is the public
+     * method that will be called by the system in general.  The local_intersect
+     * method (which is private to this class and subclasses) will then provide
+     * the concrete implementation specific to each shape type.
+     * @param ray The ray we wish to test for intersection
+     * @return The list of intersections between the ray and the shape
+     */
+    public ArrayList<Intersection> intersect(@NotNull Ray ray) {
+        Ray local_ray = ray.transform(this.transform.inverse());
+        return local_intersect(local_ray);
+    }
+
+    /**
+     * This abstract method must be provided by each individual subclass of shape
+     * to determine the points at which a ray intersects the shape.
+     * @param ray The ray we wish to test
+     * @return The list of intersections
+     */
+    protected abstract ArrayList<Intersection> local_intersect(@NotNull Ray ray);
+
+    /**
+     * Returns the normal to the object at the given point
+     * @param point The point at which we want to return the surface normal
+     * @return The computed surface normal
+     */
+    public Vector normal_at(@NotNull Point point) {
+        Point local_point = transform.inverse().multiply(point).toPoint();
+        Vector local_normal = local_normal_at(local_point);
+        Vector world_normal = transform.inverse().transpose().multiply(local_normal).toVector();
+        return world_normal.normalize();
+    }
+
+    /**
+     * Local method to compute the surface normal at a given point.
+     * @param p The point we wish to get the normal at (in object space)
+     * @return The computed normal (in object space).
+     */
+    protected abstract Vector local_normal_at(@NotNull Point p);
 }

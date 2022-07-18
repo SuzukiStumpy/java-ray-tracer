@@ -32,7 +32,7 @@ class RayTest {
     void testRayIntersectsSphereAtTwoPoints() {
         Ray r = new Ray(new Point(0,0,-5), new Vector(0, 0, 1));
         Sphere s = new Sphere();
-        List<Intersection> xs = r.intersect(s);
+        List<Intersection> xs = s.intersect(r);
 
         assertEquals(2, xs.size());
         assertEquals(4.0, xs.get(0).getTime());
@@ -43,7 +43,7 @@ class RayTest {
     void testRayIntersectsSphereAtTangent() {
         Ray r = new Ray(new Point(0,1,-5), new Vector(0, 0, 1));
         Sphere s = new Sphere();
-        List<Intersection> xs = r.intersect(s);
+        List<Intersection> xs = s.intersect(r);
 
         assertEquals(2, xs.size());
         assertEquals(5.0, xs.get(0).getTime());
@@ -54,7 +54,7 @@ class RayTest {
     void testRayMissesASphere() {
         Ray r = new Ray(new Point(0, 2, -5), new Vector(0, 0, 1));
         Sphere s = new Sphere();
-        List<Intersection> xs = r.intersect(s);
+        List<Intersection> xs = s.intersect(r);
 
         assertEquals(0, xs.size());
     }
@@ -63,7 +63,7 @@ class RayTest {
     void testRayOriginatesInsideSphere() {
         Ray r = new Ray(new Point(0, 0, 0), new Vector(0,0,1));
         Sphere s = new Sphere();
-        List<Intersection> xs = r.intersect(s);
+        List<Intersection> xs = s.intersect(r);
 
         assertEquals(2, xs.size());
         assertEquals(-1.0, xs.get(0).getTime());
@@ -74,7 +74,7 @@ class RayTest {
     void testSphereIsBehindRay() {
         Ray r = new Ray(new Point(0, 0, 5), new Vector(0,0,1));
         Sphere s = new Sphere();
-        List<Intersection> xs = r.intersect(s);
+        List<Intersection> xs = s.intersect(r);
 
         assertEquals(2, xs.size());
         assertEquals(-6.0, xs.get(0).getTime());
@@ -85,7 +85,7 @@ class RayTest {
     void testIntersectSetsTheObjectOnTheIntersection() {
         Ray r = new Ray(new Point(0,0,-5), new Vector(0,0,1));
         Sphere s = new Sphere();
-        List<Intersection> xs = r.intersect(s);
+        List<Intersection> xs = s.intersect(r);
 
         assertEquals(2, xs.size());
         assertEquals(s, xs.get(0).getShape());

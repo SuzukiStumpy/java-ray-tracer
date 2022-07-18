@@ -199,9 +199,9 @@ class MatrixTransformationTest {
     void testChainedTranslationsUsingFullyFluentAPI() {
         Point p = new Point(1, 0, 1);
         Matrix t = Matrix.identity(4)
-            .rotate_x(Math.PI / 2)
+            .translate(10, 5, 7)
             .scale(5, 5, 5)
-            .translate(10, 5, 7);
+            .rotate_x(Math.PI / 2);
 
         assertEquals(new Point(15, 0, 7), t.multiply(p).toPoint());
     }

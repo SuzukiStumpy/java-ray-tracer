@@ -60,41 +60,7 @@ public class Ray {
     public Point getPosition(double t) {
         return origin.add(direction.multiply(t));
     }
-
-    /**
-     * Get the points at which a Ray intersects a shape
-     * @param s The shape which we want to get the intersections of
-     * @return The list of time units where the ray intersects
-     */
-    public ArrayList<Intersection> intersect(@NotNull Shape s) {
-        // Transform the ray by the inverse of the shape's transformation
-        Ray r2 = new Ray(this).transform(s.getTransform().inverse());
-
-        // Create a list for storing the intersected points (if any)
-        ArrayList<Intersection> xs = new ArrayList<>();
-
-        // Compute the discriminant to determine whether we've intersected or
-        // not
-        Vector shapeToRay = r2.origin.subtract(new Point(0,0,0));
-        double a = r2.direction.dot(r2.direction);
-        double b = 2 * r2.direction.dot(shapeToRay);
-        double c = shapeToRay.dot(shapeToRay) - 1;
-        double discriminant = b*b - 4*a*c;  // This is the discriminant
-
-
-        // If we miss, simply return an empty list
-        if (discriminant < 0) {
-            return xs;
-        }
-
-        // Calculate the root of the discriminant to save having to compute
-        // it twice
-        double discriminantRoot = Math.sqrt(discriminant);
-        xs.add(new Intersection((-b - discriminantRoot) / (2*a), s));
-        xs.add(new Intersection((-b + discriminantRoot) / (2*a), s));
-        return xs;
-    }
-
+    
     /**
      * Return the (sorted) intersection list for all objects within a World object
      * with this ray
@@ -105,7 +71,7 @@ public class Ray {
         ArrayList<Intersection> xs = new ArrayList<>();
 
         for (Shape object: w.getObjects()) {
-            xs.addAll(this.intersect(object));
+            xs.addAll(object.intersect(this));
         }
 
         Collections.sort(xs);

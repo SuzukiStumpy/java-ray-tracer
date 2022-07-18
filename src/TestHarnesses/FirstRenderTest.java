@@ -26,7 +26,7 @@ public class FirstRenderTest {
 
                 Point pos = new Point(world_x, world_y, wall_z);
                 Ray r = new Ray(rayOrigin, pos.subtract(rayOrigin).normalize());
-                ArrayList<Intersection> xs = r.intersect(s);
+                ArrayList<Intersection> xs = s.intersect(r);
 
                 if (Intersection.hit(xs) != null) {
                     c.setPixel(row, col, red);
