@@ -68,7 +68,8 @@ public abstract class Light {
         @NotNull Light light,
         @NotNull Point pointPosition,
         @NotNull Vector eye,
-        @NotNull Vector normal) {
+        @NotNull Vector normal,
+        boolean inShadow) {
 
         Colour ambient;
         Colour diffuse;
@@ -111,6 +112,10 @@ public abstract class Light {
         }
 
         // Add the three components together to get the final shading for the point
-        return ambient.add(diffuse).add(specular);
+        if (inShadow) {
+            return ambient;
+        } else {
+            return ambient.add(diffuse).add(specular);
+        }
     }
 }

@@ -75,7 +75,7 @@ public class FirstCameraTest {
 
         w.addLight(light);
 
-        Camera c = new Camera(300, 150, Math.PI/3);
+        Camera c = new Camera(600, 300, Math.PI/3);
         c.setTransform(World.view_transform(
             new Point(0, 1.5, -5),
             new Point(0,1,0),

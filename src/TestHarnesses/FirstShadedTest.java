@@ -50,7 +50,7 @@ public class FirstShadedTest {
                     Vector eye = r.getDirection().negate().toVector();
 
                     Colour colour = Light.lighting(hit.getShape().getMaterial(),
-                        light, p, eye, normal);
+                        light, p, eye, normal, false);
 
                     c.setPixel(row, col, colour);
                 }

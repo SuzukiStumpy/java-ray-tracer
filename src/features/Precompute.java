@@ -11,9 +11,13 @@ import org.jetbrains.annotations.NotNull;
  * @version July 14th, 2022
  */
 public class Precompute {
+    public static final double EPSILON = 0.00001;
+
+
     public double t;
     public Shape object;
     public Point point;
+    public Point over_point;
     public Vector eye;
     public Vector normal;
     public boolean inside;
@@ -24,7 +28,7 @@ public class Precompute {
         point = r.getPosition(t);
         eye = r.getDirection().negate().toVector();
         normal = object.normal_at(point);
-
+        over_point = point.add(normal.multiply(EPSILON));
         if (normal.dot(eye) < 0) {
             inside = true;
             normal = normal.negate().toVector();

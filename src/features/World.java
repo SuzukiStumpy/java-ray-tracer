@@ -126,9 +126,10 @@ public class World {
         for (Light light: lights) {
             Colour colourAtPoint = Light.lighting(comps.object.getMaterial(),
                 light,
-                comps.point,
+                comps.over_point,
                 comps.eye,
-                comps.normal);
+                comps.normal,
+                isShadowed(comps.over_point));
 
             c = c.add(colourAtPoint);
         }
@@ -152,6 +153,13 @@ public class World {
         }
     }
 
+    /**
+     * Compute the view transformation matrix for the world
+     * @param from Originating point
+     * @param to Point we want to transform the origin to
+     * @param up Direction of 'up'
+     * @return The computed matrix.
+     */
     public static Matrix view_transform(@NotNull Point from, @NotNull Point to, @NotNull Vector up) {
         Vector forward = to.subtract(from).normalize();
         Vector upn = up.normalize();
@@ -165,5 +173,24 @@ public class World {
         };
         Matrix orientation = new Matrix(oVals);
         return orientation.multiply(Matrix.translation(-from.getX(), -from.getY(), -from.getZ()));
+    }
+
+    /**
+     * Determines whether a point in the world is in shadow.  Determined by whether an object lies between the point
+     * and any light source
+     * @param p The point we wish to test
+     * @return True if the point is in shadow, false otherwise.
+     */
+    public boolean isShadowed(@NotNull Point p) {
+        //TODO: Need to change this to work with multiple lights at some stage
+        Vector v = lights.get(0).getPosition().subtract(p);
+        double distance = v.magnitude();
+        Vector direction = v.normalize();
+
+        Ray r = new Ray(p, direction);
+        ArrayList<Intersection> xs = r.intersect(this);
+        Intersection hit = Intersection.hit(xs);
+
+        return (hit != null && hit.getTime() < distance);
     }
 }
