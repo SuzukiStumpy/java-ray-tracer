@@ -117,4 +117,46 @@ class WorldTest {
 
         assertEquals(inner.getMaterial().getColour(), c);
     }
+
+    @Test
+    void testDefaultWorldXForm() {
+        Point from = new Point(0,0,0);
+        Point to = new Point(0,0,-1);
+        Vector up = new Vector(0,1,0);
+        Matrix t = World.view_transform(from, to, up);
+        assertEquals(Matrix.identity(4), t);
+    }
+
+    @Test
+    void testViewXFormLookingInPositiveZ() {
+        Point from = new Point(0,0,0);
+        Point to = new Point(0,0,1);
+        Vector up = new Vector(0,1,0);
+        Matrix t = World.view_transform(from, to, up);
+        assertEquals(Matrix.scaling(-1, 1, -1), t);
+    }
+
+    @Test
+    void testViewTransformMovesTheWorld() {
+        Point from = new Point(0,0,8);
+        Point to = new Point(0,0,0);
+        Vector up = new Vector(0,1,0);
+        Matrix t = World.view_transform(from, to, up);
+        assertEquals(Matrix.translation(0,0,-8),t);
+    }
+
+    @Test
+    void testArbitraryViewTransform() {
+        double[][] vals = {{-0.50709, 0.50709, 0.67612, -2.36643},
+            {0.76772, 0.60609, 0.12122, -2.82843},
+            {-0.35857, 0.59761, -0.71714, 0.00000},
+            {0.00000, 0.00000, 0.00000, 1.00000}};
+        Matrix result = new Matrix(vals);
+
+        Point from = new Point(1,3,2);
+        Point to = new Point(4,-2,8);
+        Vector up = new Vector(1,1,0);
+        Matrix t = World.view_transform(from, to, up);
+        assertEquals(result.toString(), t.toString());
+    }
 }

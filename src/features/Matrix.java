@@ -364,7 +364,7 @@ public class Matrix {
      */
     public Matrix translate(double x, double y, double z) {
         Matrix t = Matrix.translation(x, y, z);
-        return t.multiply(this);
+        return this.multiply(t);
     }
 
     /**
@@ -377,7 +377,7 @@ public class Matrix {
      */
     public Matrix scale(double x, double y, double z) {
         Matrix t = Matrix.scaling(x, y, z);
-        return t.multiply(this);
+        return this.multiply(t);
     }
 
     /**
@@ -387,7 +387,7 @@ public class Matrix {
      */
     public Matrix rotate_x(double r) {
         Matrix t = Matrix.rotation_x(r);
-        return t.multiply(this);
+        return this.multiply(t);
     }
 
     /**
@@ -397,7 +397,7 @@ public class Matrix {
      */
     public Matrix rotate_y(double r) {
         Matrix t = Matrix.rotation_y(r);
-        return t.multiply(this);
+        return this.multiply(t);
     }
 
     /**
@@ -407,7 +407,7 @@ public class Matrix {
      */
     public Matrix rotate_z(double r) {
         Matrix t = Matrix.rotation_z(r);
-        return t.multiply(this);
+        return this.multiply(t);
     }
 
     /**
@@ -423,7 +423,7 @@ public class Matrix {
      */
     public Matrix shear(double xy, double xz, double yx, double yz, double zx, double zy) {
         Matrix t = Matrix.shearing(xy, xz, yx, yz, zx, zy);
-        return t.multiply(this);
+        return this.multiply(t);
     }
 
     /**

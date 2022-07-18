@@ -151,4 +151,19 @@ public class World {
             return shadeHit(comps);
         }
     }
+
+    public static Matrix view_transform(@NotNull Point from, @NotNull Point to, @NotNull Vector up) {
+        Vector forward = to.subtract(from).normalize();
+        Vector upn = up.normalize();
+        Vector left = forward.cross(upn);
+        Vector true_up = left.cross(forward);
+        double[][] oVals = new double[][] {
+            {left.getX(), left.getY(), left.getZ(), 0},
+            {true_up.getX(), true_up.getY(), true_up.getZ(), 0},
+            {-forward.getX(), -forward.getY(), -forward.getZ(), 0},
+            {0, 0, 0, 1}
+        };
+        Matrix orientation = new Matrix(oVals);
+        return orientation.multiply(Matrix.translation(-from.getX(), -from.getY(), -from.getZ()));
+    }
 }
