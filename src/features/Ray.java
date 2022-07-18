@@ -60,7 +60,7 @@ public class Ray {
     public Point getPosition(double t) {
         return origin.add(direction.multiply(t));
     }
-    
+
     /**
      * Return the (sorted) intersection list for all objects within a World object
      * with this ray
