@@ -8,20 +8,18 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * Simple, 3D checkerboard texture.  Note this looks weird when mapped onto
- * non-planar surfaces (such as spheres) since it is a 3D texture and we don't
- * currently have uv texture mapping implemented.
+ * Generate a series of radial gradients instead of linear
  *
  * @author Mark Edwards
  * @version July 19th, 2022
  */
-public class CheckerTexture extends Pattern {
+public class RadialGradient extends Pattern {
     private final ArrayList<Colour> colours;
 
     /**
      * Default constructor.  Generates a simple white to black gradient
      */
-    public CheckerTexture() {
+    public RadialGradient() {
         this(new Colour(1,1,1), new Colour(0,0,0));
     }
 
@@ -30,7 +28,7 @@ public class CheckerTexture extends Pattern {
      * @param c1 First gradient colour
      * @param c2 Second gradient colour
      */
-    public CheckerTexture(@NotNull Colour c1, @NotNull Colour c2) {
+    public RadialGradient(@NotNull Colour c1, @NotNull Colour c2) {
         super();
         colours = new ArrayList<>();
         colours.add(new Colour(c1));
@@ -58,22 +56,28 @@ public class CheckerTexture extends Pattern {
 
     @Override
     protected Colour localColourAt(@NotNull Point p) {
-        double x = Math.floor(p.getX());
-        double y = Math.floor(p.getY());
-        double z = Math.floor(p.getZ());
+        Colour a = colours.get(0);
+        Colour b = colours.get(1);
+        double x = p.getX();
+        double z = p.getZ();
+        double hyp = Math.sqrt(x*x + z*z);
+        double fraction = hyp - Math.floor(hyp);
 
-        if ((x+y+z) % 2 == 0) {
-            return colours.get(0);
-        } else {
-            return colours.get(1);
-        }
+        double distanceR = b.getR() - a.getR();
+        double distanceG = b.getG() - a.getG();
+        double distanceB = b.getB() - a.getB();
+
+        return new Colour(
+            a.getR() + (distanceR * fraction),
+            a.getG() + (distanceG * fraction),
+            a.getB() + (distanceB * fraction));
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckerTexture that = (CheckerTexture) o;
+        RadialGradient that = (RadialGradient) o;
         return colours.equals(that.colours);
     }
 
@@ -84,7 +88,7 @@ public class CheckerTexture extends Pattern {
 
     @Override
     public String toString() {
-        return "CheckerTexture{" +
+        return "RadialGradient{" +
             "colours=" + colours +
             '}';
     }

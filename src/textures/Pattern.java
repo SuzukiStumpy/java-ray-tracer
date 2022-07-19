@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * override this as required.
  *
  * TODO: Research and implement uv texture mapping for better texture handling
+ * TODO: Research and implement noise textures
  *
  * @author Mark Edwards
  * @version July 18th, 2022

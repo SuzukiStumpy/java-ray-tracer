@@ -14,7 +14,7 @@ import java.util.Objects;
  * @version July 19th, 2022
  */
 public class RingTexture extends Pattern {
-    private ArrayList<Colour> colours;
+    private final ArrayList<Colour> colours;
 
     /**
      * Default constructor.  Generates a simple white to black gradient
@@ -81,7 +81,7 @@ public class RingTexture extends Pattern {
 
     @Override
     public String toString() {
-        return "LinearGradient{" +
+        return "RingTexture{" +
             "colours=" + colours +
             '}';
     }
