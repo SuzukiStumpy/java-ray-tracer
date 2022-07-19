@@ -66,12 +66,8 @@ public class Stripes extends Pattern {
      * @param p The point which we are testing
      * @return The colour at the given point
      */
-    public Colour colourAt(@NotNull Point p) {
-        // First, transform the point we've been given to get the texture
-        // coordinate instead
-        Point local = getTransform().inverse().multiply(p).toPoint();
-
-        int index = (int)Math.floor(local.getX()) % 2;
+    protected Colour localColourAt(@NotNull Point p) {
+        int index = (int)Math.floor(p.getX()) % 2;
 
         if (index == 0) {
             return colours.get(0);

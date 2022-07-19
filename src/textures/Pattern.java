@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
  * Abstract class for a generic pattern.  Individual pattern classes can then
  * override this as required.
  *
+ * TODO: Research and implement uv texture mapping for better texture handling
+ *
  * @author Mark Edwards
  * @version July 18th, 2022
  */
@@ -38,7 +40,12 @@ public abstract class Pattern {
     }
     public abstract Colour getColour();
     public abstract Colour getColour(int index);
-    public abstract Colour colourAt(@NotNull Point p);
+    public Colour colourAt(@NotNull Point p) {
+        // Convert point to local space before passing to specific pattern functions
+        Point local = getTransform().inverse().multiply(p).toPoint();
+        return localColourAt(local);
+    }
+    protected abstract Colour localColourAt(@NotNull Point p);
     public abstract int hashCode();
     public abstract boolean equals(Object obj);
     public abstract String toString();

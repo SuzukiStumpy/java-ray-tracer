@@ -82,7 +82,7 @@ public class ConstantColour extends Pattern {
     }
 
     @Override
-    public Colour colourAt(@NotNull Point p) {
+    protected Colour localColourAt(@NotNull Point p) {
         return getColour();
     }
 }
