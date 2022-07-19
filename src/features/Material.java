@@ -1,6 +1,7 @@
 package features;
 
 import org.jetbrains.annotations.NotNull;
+import textures.*;
 
 import java.util.Objects;
 
@@ -12,7 +13,8 @@ import java.util.Objects;
  */
 public class Material {
     // The basic attributes of a surface material
-    private Colour colour;
+    private Pattern pattern;
+    //private Colour colour;
     private double ambient;
     private double diffuse;
     private double specular;
@@ -27,7 +29,7 @@ public class Material {
      *  Shininess: 200.0
      */
     public Material() {
-        colour = new Colour(1,1,1);
+        pattern = new ConstantColour(new Colour(1,1,1));
         ambient = 0.1;
         diffuse = 0.9;
         specular = 0.9;
@@ -39,7 +41,9 @@ public class Material {
      * @param other The material we wish to duplicate
      */
     public Material(@NotNull Material other) {
-        colour = new Colour(other.colour);
+        //TODO:  Need to figure out how to actually make a copy of the pattern
+        //       in other
+        pattern = other.pattern;
         ambient = other.ambient;
         diffuse = other.diffuse;
         specular = other.specular;
@@ -50,17 +54,47 @@ public class Material {
     // Getters and setters:
     //
     /**
-     * @return The current colour of the material
+     * Set a basic colour on the material (included so that older code doesn't
+     * break)
+     * @param c The colour we wish to assign
      */
-    public Colour getColour() {
-        return new Colour(colour);
+    public void setColour(@NotNull Colour c) {
+        pattern = new ConstantColour(c);
     }
 
     /**
-     * @param c Update the colour to the new value
+     * Included so that older code doesn't break.  If pattern is a constant colour
+     * then returns that colour.  Otherwise, returns the colour from the material
+     * with index zero.
+     * @return The retrieved colour.  See the method description for specifics
      */
-    public void setColour(@NotNull Colour c) {
-        colour = new Colour(c);
+    public Colour getColour() {
+        return pattern.getColour();
+    }
+
+    /**
+     * Set the pattern in the material to something else...
+     * @param p The pattern we wish to set
+     */
+    public void setPattern(@NotNull Pattern p) {
+        pattern = p;
+    }
+
+    /**
+     * Gets the material colour at a given point on the object
+     * @param p The point at which we wish to return the colour
+     * @return The colour at the given point
+     */
+    public Colour colourAt(@NotNull Point p) {
+        return pattern.colourAt(p);
+    }
+
+    /**
+     * Get the pattern stored in this material
+     * @return The pattern assigned to the material
+     */
+    public Pattern getPattern() {
+        return pattern;
     }
 
     /**
@@ -127,18 +161,18 @@ public class Material {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Material material = (Material) o;
-        return Double.compare(material.ambient, ambient) == 0 && Double.compare(material.diffuse, diffuse) == 0 && Double.compare(material.specular, specular) == 0 && Double.compare(material.shininess, shininess) == 0 && colour.equals(material.colour);
+        return Double.compare(material.ambient, ambient) == 0 && Double.compare(material.diffuse, diffuse) == 0 && Double.compare(material.specular, specular) == 0 && Double.compare(material.shininess, shininess) == 0 && pattern.equals(material.pattern);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(colour, ambient, diffuse, specular, shininess);
+        return Objects.hash(pattern, ambient, diffuse, specular, shininess);
     }
 
     @Override
     public String toString() {
         return "Material{" +
-            "colour=" + colour +
+            "pattern=" + pattern +
             ", ambient=" + ambient +
             ", diffuse=" + diffuse +
             ", specular=" + specular +

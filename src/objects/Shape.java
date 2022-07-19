@@ -108,4 +108,15 @@ public abstract class Shape {
      * @return The computed normal (in object space).
      */
     protected abstract Vector local_normal_at(@NotNull Point p);
+
+    /**
+     * Retrieves the colour of the object at a given point, taking into account
+     * both the object and material transformation matrices
+     * @param p The world-space point which we want to examine
+     * @return The colour subtended at that point
+     */
+    public Colour colourAt(@NotNull Point p) {
+        Point local_point = transform.inverse().multiply(p).toPoint();
+        return material.colourAt(local_point);
+    }
 }

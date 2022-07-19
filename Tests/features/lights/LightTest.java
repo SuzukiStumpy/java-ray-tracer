@@ -1,6 +1,8 @@
 package features.lights;
 
 import features.*;
+import objects.Shape;
+import objects.Sphere;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +20,9 @@ class LightTest {
 
     @Test
     void testLightingWithTheSurfaceInShadow() {
+        Shape o = new Sphere();
         Material m = new Material();
+        o.setMaterial(m);
         Point position = new Point(0, 0, 0);
 
         Vector eyev = new Vector(0,0,-1);
@@ -28,7 +32,7 @@ class LightTest {
             new Colour(1,1,1));
         boolean in_shadow = true;
 
-        Colour result = Light.lighting(m, light, position, eyev, normalv, in_shadow);
+        Colour result = Light.lighting(m, o, light, position, eyev, normalv, in_shadow);
 
         assertEquals(new Colour(0.1,0.1,0.1), result);
     }

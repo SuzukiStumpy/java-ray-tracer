@@ -4,6 +4,7 @@ import features.Colour;
 import features.Material;
 import features.Point;
 import features.Vector;
+import objects.Shape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -65,6 +66,7 @@ public abstract class Light {
      */
     public static Colour lighting(
         @NotNull Material m,
+        @NotNull Shape object,
         @NotNull Light light,
         @NotNull Point pointPosition,
         @NotNull Vector eye,
@@ -77,7 +79,7 @@ public abstract class Light {
         Colour black = new Colour(0,0,0);
 
         // Combine the surface colour with the light colour
-        Colour effectiveColour = m.getColour().multiply(light.getIntensity());
+        Colour effectiveColour = object.colourAt(pointPosition).multiply(light.getIntensity());
 
         // Find the direction to the light source
         Vector lightVector = light.getPosition().subtract(pointPosition).normalize();

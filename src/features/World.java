@@ -125,6 +125,7 @@ public class World {
 
         for (Light light: lights) {
             Colour colourAtPoint = Light.lighting(comps.object.getMaterial(),
+                comps.object,
                 light,
                 comps.over_point,
                 comps.eye,
