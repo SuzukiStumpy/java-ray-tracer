@@ -63,7 +63,7 @@ class WorldTest {
         Shape shape = w.getObjects().get(0);
         Intersection i = new Intersection(4, shape);
         Precompute comps = new Precompute(i, r);
-        Colour c = w.shadeHit(comps);
+        Colour c = w.shadeHit(comps, 1);
 
         assertEquals(new Colour(0.38066, 0.47583, 0.2855), c);
     }
@@ -77,7 +77,7 @@ class WorldTest {
         Shape shape = w.getObjects().get(1);
         Intersection i = new Intersection(0.5, shape);
         Precompute comps = new Precompute(i, r);
-        Colour c = w.shadeHit(comps);
+        Colour c = w.shadeHit(comps, 1);
 
         // Fails now that we have shadows involved... all values come out as 0.1
         // which is correct since only ambient colour should now be present rather
@@ -90,7 +90,7 @@ class WorldTest {
     void testTheColourWhenARayMisses() {
         World w = World.defaultWorld();
         Ray r = new Ray(new Point(0,0,-5), new Vector(0,1,0));
-        Colour c = w.colourAt(r);
+        Colour c = w.colourAt(r, 1);
 
         assertEquals(new Colour(0,0,0), c);
     }
@@ -99,7 +99,7 @@ class WorldTest {
     void testTheColourWhenARayHits() {
         World w = World.defaultWorld();
         Ray r = new Ray(new Point(0,0,-5), new Vector(0,0,1));
-        Colour c = w.colourAt(r);
+        Colour c = w.colourAt(r, 1);
 
         assertEquals(new Colour(0.38066, 0.47583, 0.2855), c);
     }
@@ -118,7 +118,7 @@ class WorldTest {
         inner.setMaterial(m);
 
         Ray r = new Ray(new Point(0,0,0.75), new Vector(0,0,-1));
-        Colour c = w.colourAt(r);
+        Colour c = w.colourAt(r, 1);
 
         assertEquals(inner.getMaterial().getColour(), c);
     }

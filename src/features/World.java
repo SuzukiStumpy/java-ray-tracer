@@ -118,10 +118,12 @@ public class World {
     /**
      * Compute the shading for a given point in the world space
      * @param comps The precomputed ray/intersection vectors
+     * @param remaining The number of recursion calls we can still make
      * @return The colour of the canvas at the current point.
      */
-    public Colour shadeHit(@NotNull Precompute comps) {
+    public Colour shadeHit(@NotNull Precompute comps, int remaining) {
         Colour c = new Colour(0,0,0);
+        Colour r = new Colour(0,0,0);
 
         for (Light light: lights) {
             Colour colourAtPoint = Light.lighting(comps.object.getMaterial(),
@@ -133,16 +135,21 @@ public class World {
                 isShadowed(comps.over_point));
 
             c = c.add(colourAtPoint);
+
+            Colour reflected = this.reflectedColour(comps, remaining);
+
+            r = r.add(reflected);
         }
-        return c;
+        return c.add(r);
     }
 
     /**
      * Determine the colour at the point where a ray intersect the world
      * @param r The ray we are shooting into the world
+     * @param remaining The number of recursion calls we can still make
      * @return The colour at the point the ray intersects something
      */
-    public Colour colourAt(@NotNull Ray r) {
+    public Colour colourAt(@NotNull Ray r, int remaining) {
         ArrayList<Intersection> xs = r.intersect(this);
         Intersection hit = Intersection.hit(xs);
 
@@ -150,7 +157,7 @@ public class World {
             return new Colour(0, 0, 0);
         } else {
             Precompute comps = new Precompute(hit, r);
-            return shadeHit(comps);
+            return shadeHit(comps, remaining);
         }
     }
 
@@ -193,5 +200,22 @@ public class World {
         Intersection hit = Intersection.hit(xs);
 
         return (hit != null && hit.getTime() < distance);
+    }
+
+    /**
+     * Determines the colour returned by a reflection ray
+     * @param comps The precomputed vectors and objects
+     * @param remaining The number of recursion calls we can make
+     * @return The colour reflected
+     */
+    public Colour reflectedColour(@NotNull Precompute comps, int remaining) {
+        if (comps.object.getMaterial().getReflectivity() == 0 || remaining == 0) {
+            return new Colour(0,0,0);
+        }
+
+        Ray reflectRay = new Ray(comps.over_point, comps.reflectv);
+        Colour c = this.colourAt(reflectRay, remaining-1);
+
+        return c.multiply(comps.object.getMaterial().getReflectivity());
     }
 }

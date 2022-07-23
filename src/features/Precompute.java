@@ -20,6 +20,7 @@ public class Precompute {
     public Point over_point;
     public Vector eye;
     public Vector normal;
+    public Vector reflectv;
     public boolean inside;
 
     public Precompute(@NotNull Intersection i, @NotNull Ray r) {
@@ -35,5 +36,6 @@ public class Precompute {
         } else {
             inside = false;
         }
+        reflectv = r.getDirection().reflect(normal);
     }
 }

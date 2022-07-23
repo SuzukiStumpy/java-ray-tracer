@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * @version July 18th, 2022
  */
 public class Camera {
+    private static final int MAX_RAY_RECURSION = 5;
     private int hsize;
     private int vsize;
     private double fov;
@@ -138,7 +139,7 @@ public class Camera {
         for (int row = 0; row < vsize; row++) {
             for (int col = 0; col < hsize; col++) {
                 Ray r = rayForPixel(col, row);
-                Colour c = world.colourAt(r);
+                Colour c = world.colourAt(r, MAX_RAY_RECURSION);
                 image.setPixel(col, row, c);
             }
         }
