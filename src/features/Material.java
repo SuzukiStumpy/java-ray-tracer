@@ -20,15 +20,19 @@ public class Material {
     private double specular;
     private double shininess;
     private double reflectivity;
+    private double transparency;
+    private double refIdx;
 
     /**
      * Default constructor.  Produces a default material with the properties:
-     *  Colour:       White (1, 1, 1)
-     *  Ambient:      0.1
-     *  Diffuse:      0.9
-     *  Specular:     0.9
-     *  Shininess:    200.0
-     *  Reflectivity: 0.0
+     *  Colour:   White (1, 1, 1)
+     *  Ambient:             0.1
+     *  Diffuse:             0.9
+     *  Specular:            0.9
+     *  Shininess:         200.0
+     *  Reflectivity:        0.0
+     *  Transparency:        0.0
+     *  Refractive Index:    1.0
      */
     public Material() {
         pattern = new ConstantColour(new Colour(1,1,1));
@@ -37,6 +41,8 @@ public class Material {
         specular = 0.9;
         shininess = 200;
         reflectivity = 0.0;
+        transparency = 0.0;
+        refIdx = 1.0;
     }
 
     /**
@@ -52,6 +58,8 @@ public class Material {
         specular = other.specular;
         shininess = other.shininess;
         reflectivity = other.reflectivity;
+        transparency = other.transparency;
+        refIdx = other.refIdx;
     }
 
     //
@@ -173,6 +181,32 @@ public class Material {
         reflectivity = value;
     }
 
+    /**
+     * Set the material's transparency from 0-100% (0.0-1.0)
+     * @param value The transparency percentage we want to set.
+     */
+    public void setTransparency(double value) { transparency = value; }
+
+    /**
+     * @return The material's transparency
+     */
+    public double getTransparency() { return transparency; }
+
+    /**
+     * Set the refractive index of a material (only useful if the object has
+     * some level of transparency, otherwise has no effect.
+     * @param value The refractive index to set.
+     */
+    public void setRefractiveIndex(double value) {
+        refIdx = value;
+    }
+
+    /**
+     * @return The refractive index of the material
+     */
+    public double getRefractiveIndex() {
+        return refIdx;
+    }
     //
     // Standard methods for equality and console output
     //
@@ -197,6 +231,9 @@ public class Material {
             ", diffuse=" + diffuse +
             ", specular=" + specular +
             ", shininess=" + shininess +
+            ", reflectivity=" + reflectivity +
+            ", transparency=" + transparency +
+            ", refIdx=" + refIdx +
             '}';
     }
 

@@ -1,11 +1,16 @@
 package features;
 
+import objects.GlassSphere;
+import objects.Shape;
 import objects.Sphere;
+import org.apache.logging.log4j.core.pattern.VariablesNotEmptyReplacementConverterTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import static features.Precompute.EPSILON;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IntersectionTest {
@@ -102,5 +107,41 @@ class IntersectionTest {
         assertEquals(new Vector(0,0,-1), comps.normal);
     }
 
+    @Test
+    void testTheSchlickApproximationUnderTotalInternalReflection() {
+        GlassSphere shape = new GlassSphere();
+        Ray r = new Ray(new Point(0,0, Math.sqrt(2)/2), new Vector(0,1,0));
+        ArrayList<Intersection> xs = new ArrayList<>(List.of(
+            new Intersection(-Math.sqrt(2)/2, shape),
+            new Intersection(Math.sqrt(2)/2, shape)
+        ));
 
+        Precompute comps = new Precompute(xs.get(1), r, xs);
+        assertEquals(1.0, comps.reflectance);
+    }
+
+    @Test
+    void testSchlickApproximationWithPerpendicularViewingAngle() {
+        GlassSphere shape = new GlassSphere();
+        Ray r = new Ray(new Point(0,0,0), new Vector(0,1,0));
+        ArrayList<Intersection> xs = new ArrayList<>(List.of(
+            new Intersection(-1, shape),
+            new Intersection(1, shape)
+        ));
+
+        Precompute comps = new Precompute(xs.get(1), r, xs);
+        assertEquals(0.04, comps.reflectance, EPSILON);
+    }
+
+    @Test
+    void testSchlickApproximationWithSmallAngleAndN1GreaterThanN2() {
+        GlassSphere shape = new GlassSphere();
+        Ray r = new Ray(new Point(0, 0.99, -2), new Vector(0,0,1));
+        ArrayList<Intersection> xs = new ArrayList<>(List.of(
+            new Intersection(1.8589, shape)
+        ));
+
+        Precompute comps = new Precompute(xs.get(0), r, xs);
+        assertEquals(0.48873, comps.reflectance, EPSILON);
+    }
 }

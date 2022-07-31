@@ -1,6 +1,8 @@
 package features;
 
 import objects.Shape;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Collections;
  * @version July 14th, 2022
  */
 public class Ray {
+    private static final Logger log = LogManager.getLogger(Ray.class);
     private final Point origin;
     private final Vector direction;
 
@@ -23,6 +26,7 @@ public class Ray {
      * @param direction Vector describing the direction the ray progresses
      */
     public Ray(@NotNull Point origin, @NotNull Vector direction) {
+        log.debug("Generating new Ray: origin: "+ origin +", direction: "+ direction);
         this.origin = origin;
         this.direction = direction;
     }
@@ -68,6 +72,7 @@ public class Ray {
      * @return The list of intersections sorted into increasing values of T
      */
     public ArrayList<Intersection> intersect(@NotNull World w) {
+        log.debug("Computing ray "+ this +" intersection with world.");
         ArrayList<Intersection> xs = new ArrayList<>();
 
         for (Shape object: w.getObjects()) {
@@ -91,5 +96,13 @@ public class Ray {
         Point o = t.multiply(origin).toPoint();
         Vector v = t.multiply(direction).toVector();
         return new Ray(o, v);
+    }
+
+    @Override
+    public String toString() {
+        return "Ray{" +
+            "origin=" + origin +
+            ", direction=" + direction +
+            '}';
     }
 }

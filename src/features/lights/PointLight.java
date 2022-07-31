@@ -22,4 +22,12 @@ public class PointLight extends Light {
     public PointLight(@NotNull Point position, @NotNull Colour intensity) {
         super(position, intensity);
     }
+
+    @Override
+    public String toString() {
+        return "PointLight{" +
+            "position=" + getPosition() +
+            ", intensity=" + getIntensity() +
+            '}';
+    }
 }

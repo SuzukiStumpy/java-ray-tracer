@@ -1,6 +1,8 @@
 package objects;
 
 import features.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,8 +16,10 @@ import java.util.Objects;
  * @version July 14th, 2022
  */
 public abstract class Shape {
+    private static final Logger log = LogManager.getLogger(Shape.class);
     private Matrix transform;
     private Material material;
+    private boolean shadowCaster;
 
     /**
      * Constructor: generates a unique ID for each generated shape
@@ -23,6 +27,7 @@ public abstract class Shape {
     public Shape() {
         transform = Matrix.identity(4);
         material = new Material();
+        shadowCaster = true;
     }
 
     @Override
@@ -78,7 +83,9 @@ public abstract class Shape {
      * @return The list of intersections between the ray and the shape
      */
     public ArrayList<Intersection> intersect(@NotNull Ray ray) {
+        log.debug("Getting intersections for ray "+ ray +" with object "+ this);
         Ray local_ray = ray.transform(this.transform.inverse());
+        log.debug("Calling local_intersect with ray inverse: "+ local_ray);
         return local_intersect(local_ray);
     }
 
@@ -119,4 +126,21 @@ public abstract class Shape {
         Point local_point = transform.inverse().multiply(p).toPoint();
         return material.colourAt(local_point);
     }
+
+    /**
+     * @return Whether the object casts a shadow or not
+     */
+    public boolean castsShadow() {
+        return shadowCaster;
+    }
+
+    /**
+     * Determines whether the object will cast a shadow or not.
+     * @param s True if the object is a shadowcaster, false otherwise
+     */
+    public void castsShadow(boolean s) {
+        shadowCaster = s;
+    }
+
+    public abstract String toString();
 }

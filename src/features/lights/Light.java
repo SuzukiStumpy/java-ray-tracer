@@ -120,4 +120,6 @@ public abstract class Light {
             return ambient.add(diffuse).add(specular);
         }
     }
+
+    public abstract String toString();
 }

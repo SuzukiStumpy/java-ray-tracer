@@ -4,9 +4,20 @@ import features.*;
 import features.lights.Light;
 import features.lights.PointLight;
 import objects.Plane;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
+import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
+import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 
 public class ReflectiveWorld {
     public static void main(String[] args) {
+        // Switch logging off for running full test
+        ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+        builder.add(builder.newRootLogger(Level.OFF));
+        LoggerContext ctx = Configurator.initialize(builder.build());
+
         World w = World.defaultWorld();
 
         Material m = new Material();

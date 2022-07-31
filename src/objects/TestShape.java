@@ -27,4 +27,9 @@ public class TestShape extends Shape {
     protected Vector local_normal_at(@NotNull Point p) {
         return p.toVector();
     }
+
+    @Override
+    public String toString() {
+        return "TestShape{transform: "+ getTransform() +", Material: "+ getMaterial() +", saved_ray: "+ saved_ray +"}";
+    }
 }

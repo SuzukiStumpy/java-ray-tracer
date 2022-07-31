@@ -1,6 +1,8 @@
 package features;
 
 import objects.Shape;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +17,8 @@ import java.util.List;
  * @version July 14th, 2022
  */
 public class Intersection implements Comparable<Intersection> {
+    private static final Logger log = LogManager.getLogger(Intersection.class);
+
     private final double t;
     private final Shape s;
 
@@ -73,5 +77,13 @@ public class Intersection implements Comparable<Intersection> {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Intersection{" +
+            "t=" + t +
+            ", s=" + s +
+            '}';
     }
 }

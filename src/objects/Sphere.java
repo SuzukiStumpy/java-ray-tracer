@@ -55,4 +55,9 @@ public class Sphere extends Shape {
     protected Vector local_normal_at(@NotNull Point p) {
         return p.subtract(new Point(0,0,0));
     }
+
+    @Override
+    public String toString() {
+        return "Sphere{transform: "+ getTransform() +", Material: "+ getMaterial() +"}";
+    }
 }
