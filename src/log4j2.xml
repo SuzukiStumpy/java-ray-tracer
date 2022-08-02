@@ -4,7 +4,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
-        <RollingFile name="AllLogs" fileName="all.log" filePattern="all-%i.log" immediateFlush="false" append="false">
+        <RollingFile name="AllLogs" fileName="all.log" filePattern="all-%i.log" immediateFlush="false" append="true">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <SizeBasedTriggeringPolicy size="10mb"/>
             <DefaultRolloverStrategy max="3" />

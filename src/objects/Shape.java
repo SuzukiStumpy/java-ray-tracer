@@ -4,6 +4,7 @@ import features.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,6 +21,7 @@ public abstract class Shape {
     private Matrix transform;
     private Material material;
     private boolean shadowCaster;
+    private Group parent;
 
     /**
      * Constructor: generates a unique ID for each generated shape
@@ -28,19 +30,41 @@ public abstract class Shape {
         transform = Matrix.identity(4);
         material = new Material();
         shadowCaster = true;
+        parent = null;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Shape shape = (Shape) o;
-        return transform.equals(shape.transform) && material.equals(shape.material);
+    /**
+     * @return The parent group of this shape.  Note can return null if no
+     *         parent assigned.
+     */
+    public Shape parent() {
+        return parent;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(transform, material);
+    /**
+     * Set the parent group for this particular shape (or group) and adds this
+     * object to the parent group contents.  Note that parent can only be set
+     * to a group, and not to any other random shape.  Also, if the shape is
+     * already part of an existing group, it will be removed from that group
+     * first.
+     * @param parentGroup The group we want to parent this shape to.
+     */
+    protected void parent(@NotNull Group parentGroup) {
+        if (parent != null) {
+            unparent();
+        }
+        parent = parentGroup;
+        parent.contents.add(this);
+    }
+
+    /**
+     * Remove the shape from a parent group
+     */
+    protected void unparent() {
+        if (parent != null) {
+            parent.contents.remove(this);
+            parent = null;
+        }
     }
 
     /**
@@ -75,6 +99,40 @@ public abstract class Shape {
     }
 
     /**
+     * Converts a point from worldspace to object space
+     * @param p The world space point we wish to convert
+     * @return The point in object space
+     */
+    public Point worldToObject(@NotNull Point p) {
+        Point op = new Point(p);
+
+        if (parent != null) {
+            op = parent.worldToObject(p);
+        }
+
+        return transform.inverse().multiply(op).toPoint();
+    }
+
+    /**
+     * Convert a vector from object space to world space
+     * @param normal The object space normal vector we want to transform
+     * @return The normal converted to world space
+     */
+    public Vector normalToWorld(@NotNull Vector normal) {
+        Vector n = transform.inverse()
+                    .transpose()
+                    .multiply(normal)
+                    .toVector()
+                    .normalize();
+
+        if (parent != null) {
+            n = parent.normalToWorld(n);
+        }
+
+        return n;
+    }
+
+    /**
      * Method to intersect a shape with a ray.  This base function is the public
      * method that will be called by the system in general.  The local_intersect
      * method (which is private to this class and subclasses) will then provide
@@ -99,14 +157,13 @@ public abstract class Shape {
 
     /**
      * Returns the normal to the object at the given point
-     * @param point The point at which we want to return the surface normal
+     * @param point The point (in world coordinates) at which we want to return the surface normal
      * @return The computed surface normal
      */
     public Vector normal_at(@NotNull Point point) {
-        Point local_point = transform.inverse().multiply(point).toPoint();
+        Point local_point = worldToObject(point);
         Vector local_normal = local_normal_at(local_point);
-        Vector world_normal = transform.inverse().transpose().multiply(local_normal).toVector();
-        return world_normal.normalize();
+        return normalToWorld(local_normal);
     }
 
     /**
@@ -123,7 +180,7 @@ public abstract class Shape {
      * @return The colour subtended at that point
      */
     public Colour colourAt(@NotNull Point p) {
-        Point local_point = transform.inverse().multiply(p).toPoint();
+        Point local_point = worldToObject(p);
         return material.colourAt(local_point);
     }
 
@@ -149,5 +206,18 @@ public abstract class Shape {
             ", material=" + material +
             ", shadowCaster=" + shadowCaster +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shape shape = (Shape) o;
+        return shadowCaster == shape.shadowCaster && transform.equals(shape.transform) && material.equals(shape.material) && Objects.equals(parent, shape.parent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(transform, material, shadowCaster, parent);
     }
 }
