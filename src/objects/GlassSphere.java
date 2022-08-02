@@ -18,9 +18,4 @@ public class GlassSphere extends Sphere {
 
         this.setMaterial(m);
     }
-
-    @Override
-    public String toString() {
-        return "GlassSphere{transform: "+ getTransform() +", Material: "+ getMaterial() +"}";
-    }
 }

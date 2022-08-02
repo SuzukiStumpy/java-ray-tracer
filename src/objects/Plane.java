@@ -48,10 +48,4 @@ public class Plane extends Shape {
     protected Vector local_normal_at(@NotNull Point p) {
         return new Vector(0, 1, 0);
     }
-
-    @Override
-    public String toString() {
-        return "Plane{transform: "+ getTransform() +", Material: "+ getMaterial() +"}";
-    }
-
 }

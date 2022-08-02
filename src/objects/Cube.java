@@ -93,9 +93,4 @@ public class Cube extends Shape {
             return new Vector(0, 0, p.getZ());
         }
     }
-
-    @Override
-    public String toString() {
-        return "Sphere{transform: "+ getTransform() +", Material: "+ getMaterial() +"}";
-    }
 }

@@ -142,5 +142,12 @@ public abstract class Shape {
         shadowCaster = s;
     }
 
-    public abstract String toString();
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + '{' +
+            "transform=" + transform +
+            ", material=" + material +
+            ", shadowCaster=" + shadowCaster +
+            '}';
+    }
 }
