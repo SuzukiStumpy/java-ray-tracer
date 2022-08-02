@@ -93,4 +93,9 @@ public class Cube extends Shape {
             return new Vector(0, 0, p.getZ());
         }
     }
+
+    @Override
+    public BoundingBox bounds() {
+        return new BoundingBox(new Point(-1,-1,-1), new Point(1,1,1));
+    }
 }

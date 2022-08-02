@@ -199,6 +199,19 @@ public abstract class Shape {
         shadowCaster = s;
     }
 
+    /**
+     * @return Returns the bounding box that encompasses the shape.  Abstract method
+     * in the basic Shape class.  Must be overridden in each concrete class
+     */
+    public abstract BoundingBox bounds();
+
+    /**
+     * @return The boundingbox that encompasses this shape in the shapes object space.
+     */
+    public BoundingBox parentSpaceBounds() {
+        return this.bounds().transform(this.transform);
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + '{' +

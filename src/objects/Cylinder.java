@@ -201,4 +201,9 @@ public class Cylinder extends Shape {
             return new Vector(p.getX(), 0, p.getZ());
         }
     }
+
+    @Override
+    public BoundingBox bounds() {
+        return new BoundingBox(new Point(-1, miny, -1), new Point(1, maxy, 1));
+    }
 }

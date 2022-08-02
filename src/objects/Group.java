@@ -68,15 +68,17 @@ public class Group extends Shape {
     protected ArrayList<Intersection> local_intersect(@NotNull Ray ray) {
         ArrayList<Intersection> xs = new ArrayList<>();
 
-        for(Shape s: contents) {
-            xs.addAll(s.intersect(ray));
+        if (bounds().intersects(ray)) {
+            for (Shape s : contents) {
+                xs.addAll(s.intersect(ray));
+            }
+            Collections.sort(xs);
         }
-        Collections.sort(xs);
         return xs;
     }
 
     /**
-     * Retunrns the normal at the given point
+     * Returns the normal at the given point
      * @param p The point we wish to get the normal at (in object space)
      * @return The normal to this shape.
      */
@@ -98,5 +100,17 @@ public class Group extends Shape {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), contents);
+    }
+
+    @Override
+    public BoundingBox bounds() {
+        BoundingBox box = new BoundingBox();
+
+        for (Shape s: contents) {
+            BoundingBox sbox = s.parentSpaceBounds();
+            box.add(sbox);
+        }
+
+        return box;
     }
 }

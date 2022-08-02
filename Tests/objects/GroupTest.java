@@ -67,4 +67,43 @@ class GroupTest {
         ArrayList<Intersection> xs = g.intersect(r);
         assertEquals(2, xs.size());
     }
+
+    @Test
+    void testGroupHasBoundingBoxThatContainsItsChildren() {
+        Sphere s = new Sphere();
+        s.setTransform(Matrix.translation(2,5,-3).scale(2,2,2));
+        Cylinder c = new Cylinder();
+        c.minY(-2);
+        c.maxY(2);
+        c.setTransform(Matrix.translation(-4,-1,4).scale(0.5,1,0.5));
+        Group g = new Group();
+        g.addObject(s);
+        g.addObject(c);
+        BoundingBox box = g.bounds();
+
+        assertEquals(new Point(-4.5, -3, -5), box.min());
+        assertEquals(new Point(4,7,4.5), box.max());
+    }
+
+    @Test
+    void testIntersectingGroupAndRayDoesntTestChildrenIfBoxIsMissed() {
+        TestShape child = new TestShape();
+        Group group = new Group();
+        group.addObject(child);
+        Ray r = new Ray(new Point(0,0,-5), new Vector(0,1,0));
+        ArrayList<Intersection> xs = group.intersect(r);
+
+        assertNull(child.saved_ray);
+    }
+
+    @Test
+    void testIntersectingGroupAndRayTestsChildrenIfBoxIsHit() {
+        TestShape child = new TestShape();
+        Group group = new Group();
+        group.addObject(child);
+        Ray r = new Ray(new Point(0,0,-5), new Vector(0,0,1));
+        ArrayList<Intersection> xs = group.intersect(r);
+
+        assertNotNull(child.saved_ray);
+    }
 }

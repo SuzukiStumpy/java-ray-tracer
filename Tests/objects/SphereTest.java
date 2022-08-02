@@ -74,4 +74,13 @@ class SphereTest {
 
         assertEquals(n.normalize(), n);
     }
+
+    @Test
+    void testSphereHasABoundingBox() {
+        Sphere s = new Sphere();
+        BoundingBox box = s.bounds();
+
+        assertEquals(new Point(-1,-1,-1), box.min());
+        assertEquals(new Point(1,1,1), box.max());
+    }
 }

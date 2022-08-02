@@ -32,4 +32,12 @@ public class TestShape extends Shape {
     public String toString() {
         return "TestShape{transform: "+ getTransform() +", Material: "+ getMaterial() +", saved_ray: "+ saved_ray +"}";
     }
+
+    /**
+     * @return For the test shape we simply return an arbitrary bounding box.
+     */
+    @Override
+    public BoundingBox bounds() {
+        return new BoundingBox(new Point(-1,-1,-1), new Point(1,1,1));
+    }
 }

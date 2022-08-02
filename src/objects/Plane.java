@@ -48,4 +48,9 @@ public class Plane extends Shape {
     protected Vector local_normal_at(@NotNull Point p) {
         return new Vector(0, 1, 0);
     }
+
+    @Override
+    public BoundingBox bounds() {
+        return new BoundingBox(new Point(Double.NEGATIVE_INFINITY, 0, Double.NEGATIVE_INFINITY), new Point(Double.POSITIVE_INFINITY, 0, Double.POSITIVE_INFINITY));
+    }
 }

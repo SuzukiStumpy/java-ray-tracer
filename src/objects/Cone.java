@@ -210,4 +210,11 @@ public class Cone extends Shape {
             return new Vector(p.getX(), y, p.getZ());
         }
     }
+
+    @Override
+    public BoundingBox bounds() {
+        double limit = Math.max(Math.abs(miny), Math.abs(maxy));
+
+        return new BoundingBox(new Point(-limit, miny, -limit), new Point(limit, maxy, limit));
+    }
 }

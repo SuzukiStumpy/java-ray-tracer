@@ -136,4 +136,14 @@ class ShapeTest {
         assertEquals(0.42854, n.getY(), EPSILON);
         assertEquals(-0.85716, n.getZ(), EPSILON);
     }
+
+    @Test
+    void testQueryingAShapesBoundingBoxInParentSpace() {
+        Sphere shape = new Sphere();
+        shape.setTransform(Matrix.translation(1,-3,5).scale(0.5, 2, 4));
+        BoundingBox box = shape.parentSpaceBounds();
+
+        assertEquals(new Point(0.5, -5, 1), box.min());
+        assertEquals(new Point(1.5,-1,9), box.max());
+    }
 }
