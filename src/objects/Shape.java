@@ -226,7 +226,7 @@ public abstract class Shape {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Shape shape = (Shape) o;
-        return shadowCaster == shape.shadowCaster && transform.equals(shape.transform) && material.equals(shape.material) && Objects.equals(parent, shape.parent);
+        return shadowCaster == shape.shadowCaster && transform.equals(shape.transform) && material.equals(shape.material); // && Objects.equals(parent, shape.parent);
     }
 
     @Override

@@ -15,9 +15,9 @@ import static features.Precompute.EPSILON;
  * @version August 3rd, 2022
  */
 public class Triangle extends Shape {
-    private Point[] points;
-    private Vector[] edges;
-    private Vector normal;
+    private final Point[] points;
+    private final Vector[] edges;
+    private final Vector normal;
 
     /**
      * Constructor for a new triangle, given the three vertex points in 3D space
@@ -120,6 +120,10 @@ public class Triangle extends Shape {
 
     @Override
     public BoundingBox bounds() {
-        return null;
+        BoundingBox box = new BoundingBox();
+        for (Point p: points) {
+            box.add(p);
+        }
+        return box;
     }
 }

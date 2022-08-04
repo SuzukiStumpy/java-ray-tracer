@@ -24,8 +24,8 @@ import static features.Precompute.EPSILON;
  * @version August 2nd, 2022
  */
 public class BoundingBox {
-    private Point min;
-    private Point max;
+    private final Point min;
+    private final Point max;
 
     /**
      * Generates an empty (and thus invalid) box.
@@ -90,7 +90,8 @@ public class BoundingBox {
      */
     public boolean contains(@NotNull Point p) {
         return p.getX() >= min.getX() && p.getX() <= max.getX()
-            && p.getY() >= min.getY() && p.getY() <= max.getY();
+            && p.getY() >= min.getY() && p.getY() <= max.getY()
+            && p.getZ() >= min.getZ() && p.getZ() <= max.getZ();
     }
 
     /**
@@ -181,5 +182,15 @@ public class BoundingBox {
         }
 
         return retVals;
+    }
+
+    /**
+     * @return Returns the point at the centre of the bounding box
+     */
+    public Point center() {
+        return new Point(
+            max.getX() - ((max.getX() - min.getX())/2),
+            max.getY() - ((max.getY() - min.getY())/2),
+            max.getZ() - ((max.getZ() - min.getZ())/2));
     }
 }

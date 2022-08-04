@@ -12,17 +12,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Camera {
     private static final int MAX_RAY_RECURSION = 5;
-    private int hsize;
-    private int vsize;
-    private double fov;
+    private final int hsize;
+    private final int vsize;
+    private final double fov;
     Matrix transform;
 
-    // Private variables used in calculating the aspect ratio and pixel sizes
-    // stored within the camera object so they can be reused for ray computations
-    private double half_view;
     private double half_width;
     private double half_height;
-    private double aspect;
     private double pixel_size;
 
     /**
@@ -89,8 +85,10 @@ public class Camera {
      * pixel size
      */
     private void computeAspect() {
-        half_view = Math.tan(fov / 2);
-        aspect = (double)hsize / (double)vsize;
+        // Private variables used in calculating the aspect ratio and pixel sizes
+        // stored within the camera object so they can be reused for ray computations
+        double half_view = Math.tan(fov / 2);
+        double aspect = (double) hsize / (double) vsize;
 
         if (aspect >= 1) {
             half_width = half_view;
@@ -136,13 +134,28 @@ public class Camera {
     public Canvas render(@NotNull World world) {
         Canvas image = new Canvas(hsize, vsize);
 
+        int totalPx = vsize * hsize;
+        double onePct = 100.0 / totalPx;
+        double progress = 0;
+        double lastOutput = 0;
+
+        System.out.print("Rendering: 0%");
+
         for (int row = 0; row < vsize; row++) {
             for (int col = 0; col < hsize; col++) {
                 Ray r = rayForPixel(col, row);
                 Colour c = world.colourAt(r, MAX_RAY_RECURSION);
                 image.setPixel(col, row, c);
+
+                progress += onePct;
+                if (progress > lastOutput+1) {
+                    System.out.print("\rRendering: "+ String.format("%.0f", progress) +"%");
+                    lastOutput = progress;
+                }
             }
         }
+
+        System.out.println("\rRendering: 100%");
 
         return image;
     }
