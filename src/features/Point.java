@@ -17,6 +17,7 @@ public class Point extends Tuple {
      */
     public Point(double x, double y, double z) {
         super(x, y, z, 1.0);
+        Statistics.points++;
     }
 
     /**
@@ -25,6 +26,8 @@ public class Point extends Tuple {
      */
     public Point(Point other) {
         super(other.getX(), other.getY(), other.getZ(), 1.0);
+
+        Statistics.points++;
     }
 
     /**

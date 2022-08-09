@@ -75,6 +75,8 @@ public class Precompute {
             }
         }
         reflectance = schlick();
+
+        Statistics.precomputes++;
     }
 
     /**
@@ -94,10 +96,7 @@ public class Precompute {
             }
 
             // Compute cos of theta_t using trig identity
-            double cos_t = Math.sqrt(1.0 - sin2_t);
-
-            // when n1 > n2 use cos(theta_t) instead
-            cos = cos_t;
+            cos = Math.sqrt(1.0 - sin2_t);
         }
 
         double r0 = Math.pow((n1 - n2) / (n1 + n2), 2);

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class Vector extends Tuple {
     public Vector(double x, double y, double z) {
         super(x, y, z, 0.0);
+        Statistics.vectors++;
     }
 
     /**
@@ -19,6 +20,7 @@ public class Vector extends Tuple {
      */
     public Vector(Vector other) {
         super(other.getX(), other.getY(), other.getZ(), 0.0);
+        Statistics.vectors++;
     }
 
     /**

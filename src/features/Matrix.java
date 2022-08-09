@@ -15,6 +15,7 @@ import java.util.Objects;
 public class Matrix {
     // Matrix data is held internally in an array.
     private final double[] matrix;
+    private Matrix inverse;
     private final int degree;
 
     /**
@@ -30,6 +31,9 @@ public class Matrix {
 
         this.degree = degree;
         this.matrix = new double[degree * degree];
+        this.inverse = null;
+
+        Statistics.matrices++;
     }
 
     /**
@@ -54,15 +58,25 @@ public class Matrix {
                 matrix[idx] = values[row][col];
             }
         }
+
+        // We won't actually precompute the inverse of the matrix when we construct,
+        // but instead, wait until it's been called for the first time.  That way
+        // we won't waste cycles computing it for those instances where it's really
+        // not required.
+        this.inverse = null;
+
+        Statistics.matrices++;
     }
 
     /**
      * Copy constructor for Matrix objects.  Allows us to clone the current object.
      * @param other The Matrix we wish to clone
      */
-    public Matrix(Matrix other) {
+    public Matrix(@NotNull Matrix other) {
         this.degree = other.degree;
         this.matrix = other.matrix.clone();
+
+        Statistics.matrices++;
     }
 
     /**
@@ -87,10 +101,11 @@ public class Matrix {
      * @param y The column of the element we wish to set
      * @param value The value we wish to set
      */
-    public void setElement(int x, int y, double value) {
+    private void setElement(int x, int y, double value) {
         try {
             int index = getElementIndex(x, y);
             matrix[index] = value;
+            this.inverse = null;
         }
         catch (IndexOutOfBoundsException e) {
             System.err.println(e.getMessage());
@@ -109,7 +124,7 @@ public class Matrix {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        DecimalFormat fmt = new DecimalFormat("0.00000");
+        DecimalFormat fmt = new DecimalFormat("0.0000");
 
         for (int row = 0; row < degree; row++){
             sb.append("| ");
@@ -339,10 +354,13 @@ public class Matrix {
     }
 
     public Matrix inverse() throws RuntimeException {
+        if (this.inverse != null) {
+            return this.inverse;
+        }
+
         if (!isInvertible()) {
             throw new RuntimeException("Matrix is not invertible!");
         }
-
         Matrix m = new Matrix(degree);
         double det = det();
 
@@ -352,6 +370,7 @@ public class Matrix {
                 m.setElement(col, row, c / det);
             }
         }
+        this.inverse = m;
         return m;
     }
 
@@ -430,7 +449,7 @@ public class Matrix {
      * @param degree The size of the square identity matrix to return
      * @return The identity matrix thus generated
      */
-    public static Matrix identity(int degree) {
+    public static @NotNull Matrix identity(int degree) {
         Matrix m = new Matrix(degree);
         for (int i = 0; i < degree; i++) {
             m.setElement(i, i, 1);
@@ -445,7 +464,7 @@ public class Matrix {
      * @param z The amount to move in z
      * @return The specified translation matrix
      */
-    public static Matrix translation(double x, double y, double z) {
+    public static @NotNull Matrix translation(double x, double y, double z) {
         Matrix m = Matrix.identity(4);
         m.setElement(0, 3, x);
         m.setElement(1, 3, y);
@@ -461,7 +480,7 @@ public class Matrix {
      * @param z Scale factor in Z
      * @return The resultant scaling matrix
      */
-    public static Matrix scaling(double x, double y, double z) {
+    public static @NotNull Matrix scaling(double x, double y, double z) {
         Matrix m = Matrix.identity(4);
         m.setElement(0,0, x);
         m.setElement(1, 1, y);
@@ -474,7 +493,7 @@ public class Matrix {
      * @param r The amount to rotate by (in radians)
      * @return The resulting rotation matrix
      */
-    public static Matrix rotation_x(double r) {
+    public static @NotNull Matrix rotation_x(double r) {
         Matrix m = Matrix.identity(4);
         m.setElement(1,1, Math.cos(r));
         m.setElement(1,2, -Math.sin(r));
@@ -488,7 +507,7 @@ public class Matrix {
      * @param r The amount to rotate by (in radians)
      * @return The resulting rotation matrix
      */
-    public static Matrix rotation_y(double r) {
+    public static @NotNull Matrix rotation_y(double r) {
         Matrix m = Matrix.identity(4);
         m.setElement(0,0, Math.cos(r));
         m.setElement(0,2, Math.sin(r));
@@ -502,7 +521,7 @@ public class Matrix {
      * @param r The amount to rotate by (in radians)
      * @return The resulting rotation matrix
      */
-    public static Matrix rotation_z(double r) {
+    public static @NotNull Matrix rotation_z(double r) {
         Matrix m = Matrix.identity(4);
         m.setElement(0,0, Math.cos(r));
         m.setElement(0,1, -Math.sin(r));

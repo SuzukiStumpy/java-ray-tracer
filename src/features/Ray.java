@@ -29,6 +29,8 @@ public class Ray {
         log.debug("Generating new Ray: origin: "+ origin +", direction: "+ direction);
         this.origin = origin;
         this.direction = direction;
+
+        Statistics.rays++;
     }
 
     /**
@@ -38,6 +40,8 @@ public class Ray {
     public Ray(@NotNull Ray other) {
         origin = new Point(other.origin);
         direction = new Vector(other.direction);
+
+        Statistics.rays++;
     }
 
     /**
@@ -79,7 +83,7 @@ public class Ray {
             xs.addAll(object.intersect(this));
         }
 
-        Collections.sort(xs);
+        //Collections.sort(xs);
 
         return xs;
     }

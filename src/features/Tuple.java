@@ -29,6 +29,8 @@ public class Tuple {
         this.y = y;
         this.z = z;
         this.w = w;
+
+        Statistics.tuples++;
     }
 
     /**

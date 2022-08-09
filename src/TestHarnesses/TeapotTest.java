@@ -84,5 +84,7 @@ public class TeapotTest {
         System.out.println("Writing output.");
 
         PPMWriter.saveCanvasToFile("testCylinderScene.ppm", canvas);
+
+        System.out.println(Statistics.show());
     }
 }

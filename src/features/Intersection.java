@@ -25,6 +25,8 @@ public class Intersection implements Comparable<Intersection> {
     public Intersection(double time, @NotNull Shape shape) {
         t = time;
         s = shape;
+
+        Statistics.intersections++;
     }
 
     /**
